@@ -5,18 +5,180 @@ El llenguatge minidom és un mòdul a Python que permet la manipulació de docum
 Biblioteca estàndard: minidom és part de la biblioteca estàndard de Python, la qual cosa significa que no és necessari instal·lar biblioteques addicionals per utilitzar-lo.
 Facilitat d'ús: Proporciona una interfície intuïtiva i fàcil d'utilitzar per crear, modificar i analitzar documents XML.
 DOM (Model d'Objecte de Document): Utilitza el model d'objecte de document per representar l'estructura del document XML com un arbre de nodes, la qual cosa facilita la navegació i la manipulació del document.
-### Exemple de creació d'un document XML amb minidom
+### Exemple de com mostrar la etiqueta arrel d'un document xml amb minidom
 ```python
-import xml.dom.minidom
-doc = xml.dom.minidom.Document()
-root = doc.createElement("root")
-doc.appendChild(root)
+from xml.dom import minidom
+doc = minidom.parse("fitxer.xml")
+
+node_arrel = doc.documentElement
+
+text_node_arrel = node_arrel.tagName
+
+print (text_node_arrel)
 ```
+### Exemple de com mostrar tot el document xml amb minidom
+```python
+from xml.dom import minidom
+doc = minidom.parse("fitxer.xml")
 
+tot = doc.toxml()
+print (tot)
+```
+### Exemple de crear un document html amb la informació agafada de un xml amb minidom
+```python
+from xml.dom import minidom
+doc = minidom.parse("fitxer.xml")
 
+f_=open("dom.html","w")
 
+llistapersona = doc.getElementsByTagName("person")
+f_.write(f"<html><head><title>Diaris DOM</title></head>\n")
+f_.write(f"  <body>\n")
+for person in llistapersona:
+    atributID = person.getAttribute("id")
+    nom = person.getElementsByTagName("name")[0]
+    nom_text = nom.firstChild.data
+    gender = nom.getAttribute("gender")
+    edat = person.getElementsByTagName("age")[0].firstChild.data
+    naixament = person.getElementsByTagName("naixement")[0].firstChild.data
 
+    f_.write(f"       <h2>{atributID} - {nom_text}</h2>\n")
+    f_.write(f"       <ul>\n")
+    f_.write(f"           <li>age - {edat}</li>\n")
+    f_.write(f"           <li>sex - {gender}</li>\n")  
+    f_.write(f"           <li>naixament - {naixament}</li>\n")
+    f_.write(f"       </ul>\n")  
+f_.write(f"   </body>\n")
+f_.write(f"</html>\n")
+```
+### Exemple de crear un horari amb html amb la base de un xml creat amb el xml
+```python
+from xml.dom import minidom
 
+doc = minidom.parse("UF2-3.xml")
+f_ = open("taula.html", "w")
+
+alumne = doc.getElementsByTagName("alumne")[0]
+nom_estudiant = alumne.getElementsByTagName("nom")[0].firstChild.data
+curs = alumne.getElementsByTagName("curs")[0].firstChild.data
+foto_estudiant = alumne.getElementsByTagName("foto")[0].firstChild.data
+
+franges = doc.getElementsByTagName("franja")
+classes = doc.getElementsByTagName("classes")[0]
+dies = classes.getElementsByTagName("dia")
+
+# Diccionario para almacenar colores asociados a asignaturas
+colors_dict = {}
+colors = doc.getElementsByTagName("colors")[0].getElementsByTagName("assignatura")
+for color_node in colors:
+    assignatura = color_node.firstChild.data
+    color = color_node.getAttribute("color")
+    colors_dict[assignatura] = color
+
+f_.write("<!DOCTYPE html>\n")
+f_.write("<html>\n")
+f_.write("  <head>\n")
+f_.write("     <meta charset='UTF-8'>\n")
+f_.write("     <meta name='viewport' content='width=device-width, initial-scale=1.0'>\n")
+f_.write(f"      <title>Horari de {nom_estudiant}</title>\n")
+f_.write("  </head>\n")
+f_.write("  <body>\n")
+f_.write("      <header>\n")
+f_.write(f"              <h1>Horari de {nom_estudiant}</h1>\n")
+f_.write(f"              <p>Curs: {curs}</p>\n")
+f_.write(f"              <img src='{foto_estudiant}' alt='Foto de {nom_estudiant}'>\n")
+f_.write("      </header>\n")
+f_.write("      <table border='1'>\n")
+f_.write("          <thead>\n")
+f_.write("              <tr>\n")
+f_.write("                  <th>Franges Horàries</th>\n")
+
+for dia in dies:
+    nom_dia = dia.getElementsByTagName("nom")[0].firstChild.data
+    f_.write(f"                  <th>{nom_dia}</th>\n")
+f_.write("              </tr>\n")
+f_.write("          </thead>\n")
+f_.write("          <tbody>\n")
+
+for i, franja in enumerate(franges):
+    f_.write("              <tr>\n")
+    f_.write(f"                  <td>{franja.firstChild.data}</td>\n")
+    for dia in dies:
+        assignatures = dia.getElementsByTagName("assignatura")
+        assig = assignatures[i].firstChild.data if i < len(assignatures) else ""
+        color = colors_dict.get(assig, "#FFFFFF")  # Si no hay color asignado, por defecto blanco
+        f_.write(f"                  <td style='background-color: {color};'>{assig}</td>\n")
+    f_.write("              </tr>\n")
+
+f_.write("          </tbody>\n")
+f_.write("      </table>\n")
+f_.write("  </body>\n")
+f_.write("</html>\n")
+
+f_.close()from xml.dom import minidom
+
+doc = minidom.parse("UF2-3.xml")
+f_ = open("taula.html", "w")
+
+alumne = doc.getElementsByTagName("alumne")[0]
+nom_estudiant = alumne.getElementsByTagName("nom")[0].firstChild.data
+curs = alumne.getElementsByTagName("curs")[0].firstChild.data
+foto_estudiant = alumne.getElementsByTagName("foto")[0].firstChild.data
+
+franges = doc.getElementsByTagName("franja")
+classes = doc.getElementsByTagName("classes")[0]
+dies = classes.getElementsByTagName("dia")
+
+# Diccionario para almacenar colores asociados a asignaturas
+colors_dict = {}
+colors = doc.getElementsByTagName("colors")[0].getElementsByTagName("assignatura")
+for color_node in colors:
+    assignatura = color_node.firstChild.data
+    color = color_node.getAttribute("color")
+    colors_dict[assignatura] = color
+
+f_.write("<!DOCTYPE html>\n")
+f_.write("<html>\n")
+f_.write("  <head>\n")
+f_.write("     <meta charset='UTF-8'>\n")
+f_.write("     <meta name='viewport' content='width=device-width, initial-scale=1.0'>\n")
+f_.write(f"      <title>Horari de {nom_estudiant}</title>\n")
+f_.write("  </head>\n")
+f_.write("  <body>\n")
+f_.write("      <header>\n")
+f_.write(f"              <h1>Horari de {nom_estudiant}</h1>\n")
+f_.write(f"              <p>Curs: {curs}</p>\n")
+f_.write(f"              <img src='{foto_estudiant}' alt='Foto de {nom_estudiant}'>\n")
+f_.write("      </header>\n")
+f_.write("      <table border='1'>\n")
+f_.write("          <thead>\n")
+f_.write("              <tr>\n")
+f_.write("                  <th>Franges Horàries</th>\n")
+
+for dia in dies:
+    nom_dia = dia.getElementsByTagName("nom")[0].firstChild.data
+    f_.write(f"                  <th>{nom_dia}</th>\n")
+f_.write("              </tr>\n")
+f_.write("          </thead>\n")
+f_.write("          <tbody>\n")
+
+for i, franja in enumerate(franges):
+    f_.write("              <tr>\n")
+    f_.write(f"                  <td>{franja.firstChild.data}</td>\n")
+    for dia in dies:
+        assignatures = dia.getElementsByTagName("assignatura")
+        assig = assignatures[i].firstChild.data if i < len(assignatures) else ""
+        color = colors_dict.get(assig, "#FFFFFF")  # Si no hay color asignado, por defecto blanco
+        f_.write(f"                  <td style='background-color: {color};'>{assig}</td>\n")
+    f_.write("              </tr>\n")
+
+f_.write("          </tbody>\n")
+f_.write("      </table>\n")
+f_.write("  </body>\n")
+f_.write("</html>\n")
+
+f_.close()
+```
 
 ## XSLT (Transformacions de Llenguatge d'Estil Extensible)
 XSLT és un llenguatge de transformació utilitzat per transformar documents XML en altres formats, com ara HTML, XML o text pla. Algunes de les característiques i funcionalitats més importants de XSLT inclouen:
