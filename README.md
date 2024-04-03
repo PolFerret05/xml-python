@@ -1,10 +1,12 @@
 # Apunts sobre minidom i XSLT
 ## minidom a Python
-El llenguatge minidom és un mòdul a Python que permet la manipulació de documents XML d'una manera senzilla i eficient. Algunes de les seves característiques i funcionalitats clau són les següents:
+[Guia per utilitzar dom](https://www.w3schools.com/xml/dom_intro.asp)
 
-Biblioteca estàndard: minidom és part de la biblioteca estàndard de Python, la qual cosa significa que no és necessari instal·lar biblioteques addicionals per utilitzar-lo.
-Facilitat d'ús: Proporciona una interfície intuïtiva i fàcil d'utilitzar per crear, modificar i analitzar documents XML.
-DOM (Model d'Objecte de Document): Utilitza el model d'objecte de document per representar l'estructura del document XML com un arbre de nodes, la qual cosa facilita la navegació i la manipulació del document.
+_El llenguatge minidom és un mòdul a Python que permet la manipulació de documents XML d'una manera senzilla i eficient. Algunes de les seves característiques i funcionalitats clau són les següents:_
+
+- **Biblioteca estàndard:** minidom és part de la biblioteca estàndard de Python, la qual cosa significa que no és necessari instal·lar biblioteques addicionals per utilitzar-lo.
+- **Facilitat d'ús:** Proporciona una interfície intuïtiva i fàcil d'utilitzar per crear, modificar i analitzar documents XML.
+- **DOM (Model d'Objecte de Document):** Utilitza el model d'objecte de document per representar l'estructura del document XML com un arbre de nodes, la qual cosa facilita la navegació i la manipulació del document.
 ### Exemple de com mostrar la etiqueta arrel d'un document xml amb minidom
 ```python
 from xml.dom import minidom
@@ -179,13 +181,18 @@ f_.write("</html>\n")
 
 f_.close()
 ```
+### Així es com queda:
+![lala](https://github.com/PolFerret05/xml-python/assets/165801828/6bf4ad43-f25f-4a65-a9b1-96277993dd67)
+
 
 ## XSLT (Transformacions de Llenguatge d'Estil Extensible)
-XSLT és un llenguatge de transformació utilitzat per transformar documents XML en altres formats, com ara HTML, XML o text pla. Algunes de les característiques i funcionalitats més importants de XSLT inclouen:
+[Guia per utilitzar xslt](https://www.w3schools.com/xml/xsl_intro.asp)
 
-Basat en patrons: XSLT utilitza regles de transformació basades en patrons per definir com s'ha de processar cada element i atribut del document XML d'entrada.
+_XSLT és un llenguatge de transformació utilitzat per transformar documents XML en altres formats, com ara HTML, XML o text pla. Algunes de les característiques i funcionalitats més importants de XSLT inclouen:_
+
+**Basat en patrons:** XSLT utilitza regles de transformació basades en patrons per definir com s'ha de processar cada element i atribut del document XML d'entrada.
 Separació de contingut i presentació: Permet separar l'estructura del contingut XML de la seva presentació, la qual cosa facilita la generació de diferents vistes de les mateixes dades.
-Potent i flexible: Proporciona una àmplia gamma de funcions i capacitats per manipular i transformar documents XML de manera eficient.
+**Potent i flexible:** Proporciona una àmplia gamma de funcions i capacitats per manipular i transformar documents XML de manera eficient.
 ### Exemple d'una fulla d'estil XSLT
 ```xsl
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -203,6 +210,65 @@ Potent i flexible: Proporciona una àmplia gamma de funcions i capacitats per ma
   </xsl:template>
 </xsl:stylesheet>
 ```
+### Exemple de taula amb xslt
+```xsl
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+  <html>
+  <head>
+    <script src="https://kit.fontawesome.com/3e4c1a6931.js" crossorigin="anonymous"></script>
+    <style>
+      .c2005{
+        background-color: #ff0202;
+      }
+      .c2007{
+        background-color: #33FFFD;
+      }
+      .c2009{
+        background-color: #02ff20;
+      }
+      .c2010{
+        background-color: #ffd902;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Exercici de la botiga</h2>
+    <table border="1">
+      <tr>
+        <th>Titol</th>
+        <th>Director</th>
+        <th>Preu</th>
+        <th>Any</th>
+        <th>Idioma</th> 
+      </tr>
+      <xsl:for-each select="botiga/bluray">
+        <tr class="c{any}">
+          <td><a href="https://www.imdb.com/find?q={titol}"><xsl:value-of select="titol" /></a></td>
+          <td><xsl:value-of select="director" /></td>
+          <td><xsl:choose>
+            <xsl:when test="preu &gt; 15">
+              <i class="fa-solid fa-money-bills"></i>
+            </xsl:when>
+            <xsl:otherwise>
+              <i class="fa-solid fa-money-bill"></i>
+            </xsl:otherwise>
+          </xsl:choose></td>
+          <td><xsl:value-of select="any" /></td>
+          <td><xsl:value-of select="titol/@idioma" /></td>
+          <td><img width="30px" heigth="30px"><xsl:attribute name="src"><xsl:value-of select="titol/@idioma"/>.jpg</xsl:attribute></img></td>
+        </tr>
+      </xsl:for-each>
+    </table>
+  </body>
+  </html>
+</xsl:template>
+</xsl:stylesheet>
+```
+### Així es com queda:
+![botiga](https://github.com/PolFerret05/xml-python/assets/165801828/08dff8db-02a8-4251-a4b1-d7c07ce06ca4)
+
 ### Exemple d'horari amb xslt
 ```xsl
 <?xml version="1.0" encoding="UTF-8"?>
@@ -276,3 +342,7 @@ Potent i flexible: Proporciona una àmplia gamma de funcions i capacitats per ma
     </xsl:template>
 </xsl:stylesheet>
 ```
+### Així es com queda:
+![Captura de pantalla 2024-04-03 194828](https://github.com/PolFerret05/xml-python/assets/165801828/ed9ac62e-c0f1-4e32-ae1a-7b4d135307f9)
+
+
