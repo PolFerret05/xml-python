@@ -203,3 +203,76 @@ Potent i flexible: Proporciona una àmplia gamma de funcions i capacitats per ma
   </xsl:template>
 </xsl:stylesheet>
 ```
+### Exemple d'horari amb xslt
+```xsl
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="html" indent="yes"/>
+    <xsl:template match="/horari">
+        <head>
+            <style type="text/css">
+                table {
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid gray;
+                    padding: 5px;
+                    text-align: center;
+                }
+                th {
+                    background-color: lightgray;
+                }
+                .M01 { background-color: #ff9999; }
+                .M02 { background-color: #99ff99; }
+                .M03 { background-color: #9999ff; }
+                .M04 { background-color: #ffff99; }
+                .M08 { background-color: #cc99ff; }
+                .M09 { background-color: #ff99ff; }
+                .M10 { background-color: #ffcc99; }
+                .M11 { background-color: #99ffff; }
+                ul, li {
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <html>
+            <body>
+                <img src="{@header}" width="auto"/>
+                <table>
+                    <tr>
+                        <xsl:for-each select="setmana/dia">
+                            <th>
+                                <xsl:value-of select="@nom"/>
+                            </th>
+                        </xsl:for-each>
+                    </tr>
+                    <tr>
+                        <xsl:for-each select="setmana/dia">
+                            <td>
+                                <xsl:for-each select="modul">
+                                    <p class="{codi}">
+                                        <xsl:value-of select="codi"/>
+                                        <xsl:text> - </xsl:text>
+                                        <xsl:value-of select="nom"/>
+                                    </p>
+                                </xsl:for-each>
+                            </td>
+                        </xsl:for-each>
+                    </tr>
+                </table>
+                <ul>
+                    <h1><xsl:value-of select="links/@nom"/></h1>
+                    <xsl:for-each select="links/link">
+                        <xsl:sort select="nom"/>
+                        <li>
+                            <a href="{url}">
+                                <xsl:value-of select="nom"/>
+                            </a>
+                        </li>
+                    </xsl:for-each>
+                </ul>
+            </body>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>
+```
